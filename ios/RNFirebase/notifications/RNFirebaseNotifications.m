@@ -9,8 +9,8 @@
 // For iOS 10 we need to implement UNUserNotificationCenterDelegate to receive display
 // notifications via APNS
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-@import UserNotifications;
-@interface RNFirebaseNotifications () <UNUserNotificationCenterDelegate>
+
+@interface RNFirebaseNotifications ()
 #else
 @interface RNFirebaseNotifications ()
 #endif
@@ -47,10 +47,6 @@ RCT_EXPORT_MODULE();
 }
 
 - (void)initialise {
-    // If we're on iOS 10 then we need to set this as a delegate for the UNUserNotificationCenter
-    if (@available(iOS 10.0, *)) {
-        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
-    }
 
     // Set static instance for use from AppDelegate
     theRNFirebaseNotifications = self;
@@ -146,11 +142,10 @@ RCT_EXPORT_MODULE();
 // ** iOS 10+
 // *******************************************************
 
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 // Handle incoming notification messages while app is in the foreground.
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
        willPresentNotification:(UNNotification *)notification
-         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler NS_AVAILABLE_IOS(10_0) {
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
     UNNotificationTrigger *trigger = notification.request.trigger;
     BOOL isFcm = trigger && [notification.request.trigger class] == [UNPushNotificationTrigger class];
     BOOL isScheduled = trigger && [notification.request.trigger class] == [UNCalendarNotificationTrigger class];
@@ -186,20 +181,15 @@ RCT_EXPORT_MODULE();
 }
 
 // Handle notification messages after display notification is tapped by the user.
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-didReceiveNotificationResponse:(UNNotificationResponse *)response
-#if defined(__IPHONE_11_0)
-         withCompletionHandler:(void(^)(void))completionHandler NS_AVAILABLE_IOS(10_0) {
-#else
-         withCompletionHandler:(void(^)())completionHandler NS_AVAILABLE_IOS(10_0) {
-#endif
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler {
+
      NSDictionary *message = [self parseUNNotificationResponse:response];
 
      [self sendJSEvent:self name:NOTIFICATIONS_NOTIFICATION_OPENED body:message];
      completionHandler();
 }
 
-#endif
+
 
 // *******************************************************
 // ** Finish UNUserNotificationCenterDelegate methods

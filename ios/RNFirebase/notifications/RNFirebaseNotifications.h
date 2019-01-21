@@ -5,15 +5,30 @@
 #if __has_include(<FirebaseMessaging/FirebaseMessaging.h>)
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
+#import <UserNotifications/UserNotifications.h>
 
 @interface RNFirebaseNotifications : RCTEventEmitter<RCTBridgeModule>
 
 + (void)configure;
 + (_Nonnull instancetype)instance;
 
+
+
 #if !TARGET_OS_TV
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler;
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler;
+
+
 - (void)didReceiveLocalNotification:(nonnull UILocalNotification *)notification;
-- (void)didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(void (^_Nonnull)(UIBackgroundFetchResult))completionHandler;
+
+- (void)didReceiveRemoteNotification:(NSDictionary *)userInfo
+              fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
+
+
 #endif
 
 @end
