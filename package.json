@@ -6,6 +6,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "install": "yarn run build && yarn run build-flow",
     "build": "genversion src/version.js && yarn run build-src",
     "build-src": "BABEL_ENV=publish babel src -d dist --ignore __tests__ --copy-files",
     "build-flow": "flow-copy-source -i */__tests__* src dist",
@@ -17,7 +18,6 @@
     "format:assets": "prettier --ignore-path .gitignore --write \"**/*.{json,md}\"",
     "prepare": "yarn run clean && yarn run build && yarn run build-flow",
     "precommit": "lint-staged",
-    "postinstall": "yarn run build && yarn run build-flow",
     "prepublishOnly": "yarn run validate-ts-declarations && yarn run validate-flow-declarations"
   },
   "repository": {
