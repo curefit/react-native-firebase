@@ -10,7 +10,7 @@
     "build-src": "BABEL_ENV=publish babel src -d dist --ignore __tests__ --copy-files",
     "build-flow": "flow-copy-source -i */__tests__* src dist",
     "build-src-watch": "genversion src/version.js && BABEL_ENV=development babel src -d dist --ignore __tests__ --copy-files --watch",
-    "clean": "rimraf dist/",
+    "clean": "./node_modules/.bin/rimraf dist/",
     "validate-ts-declarations": "tsc --project ./",
     "validate-flow-declarations": "flow",
     "format": "yarn run format:assets && yarn run lint -- --fix",
