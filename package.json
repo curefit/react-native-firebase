@@ -15,7 +15,7 @@
     "validate-flow-declarations": "flow",
     "format": "yarn run format:assets && yarn run lint -- --fix",
     "format:assets": "prettier --ignore-path .gitignore --write \"**/*.{json,md}\"",
-    "prepare": "yarn run clean && yarn run build && yarn run build-flow",
+    "postinstall": "yarn run clean && yarn run build && yarn run build-flow",
     "precommit": "lint-staged",
     "prepublishOnly": "yarn run validate-ts-declarations && yarn run validate-flow-declarations"
   },
